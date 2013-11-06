@@ -1,3 +1,6 @@
+#!/bin/bash
+#    Copyright (C) 2013 Thomas Carette
+
 isnumber ()
 {
 ok=0
