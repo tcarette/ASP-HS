@@ -37,3 +37,9 @@ file names (<root>.<std extension>).
 Calculate configuration weights and cumulated weights using .l file
 * argument 1: root name of the target
 * argument 2: root name of the .c file containing the configuration to be condsidered
+
+#### nrcfg (and tnrcfg)
+
+Check number of configuration state functions in .c files (given in argument).
+nrcfg allows several .c files as arguments.
+nrcfg provides #CSF/block, tnrcfg provides the total #CSF.

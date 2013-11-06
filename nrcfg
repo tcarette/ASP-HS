@@ -1,0 +1,75 @@
+#!/bin/bash
+
+
+nr ()
+{
+if [ ! -e $1 ]
+then
+	echo "Missing file '$1'." > /dev/stderr
+	exit 1
+fi
+
+nl='
+'
+
+blstr=$( grep -n \* $1 )
+
+echo ""
+
+if $(grep -q "Core" $1)
+then
+  echo "Grasp list"
+  if $( echo "$blstr" | grep -vq \* )
+  then
+    blstr=$( wc -l $1 | gawk '{ print $1 }' )
+  else
+    blstr=${blstr}${nl}$( wc -l $1 | gawk '{ print $1 }' )
+  fi
+  off0=5
+  off=0
+  div=3
+else
+  off0=0
+  off=3
+  div=2
+fi
+
+numbl=$( echo "$blstr" | wc -l )
+
+echo "${numbl} block(s)"
+echo ""
+eofbl[0]=${off0}
+for bl in $( seq 1 ${numbl} )
+do
+  tmp=$( echo "$blstr" | head -$bl | tail -1 )
+  eofbl[${bl}]=${tmp%:*}
+  echo "bl${bl} : $(( (${eofbl[${bl}]}-${eofbl[$(( ${bl}-1))]}-${off})/${div} ))"
+done
+}
+
+############
+if [ $# == 1 ]
+then
+####
+  nr $1
+####
+else
+####
+for i in "$@"
+do
+n=$( nr $i | grep "bl1* : " | awk '{print $3}' )
+m=$( nr $i | grep "bl[2-9]* : " | awk '{print $3}' )
+echo "$i: bl1: $n"
+if [ "$m" != '' ]
+then
+  k=2
+  for j in $m
+  do
+    echo " - bl${k}:  $j"
+    k=$(( $k+1 ))
+  done
+fi
+done | column -t
+####
+fi
+###########

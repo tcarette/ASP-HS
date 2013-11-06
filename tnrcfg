@@ -1,0 +1,47 @@
+#!/bin/bash
+
+if [ ! -e $1 ]
+then
+#	echo "Missing file '$1'." > /dev/stderr
+	exit 1
+fi
+
+nl='
+'
+
+blstr=$( grep -n \* $1 )
+
+# echo ""
+
+if $( grep -q 'Core' $1 )
+then
+#  echo "Grasp list"
+  if $( echo "$blstr" | grep -vq \* )
+  then
+    blstr=$( wc -l $1 | gawk '{ print $1 }' )
+  else
+    blstr=${blstr}${nl}$( wc -l $1 | gawk '{ print $1 }' )
+  fi
+  off0=5
+  off=0
+  div=3
+else
+  off0=0
+  off=3
+  div=2
+fi
+
+numbl=$( echo "$blstr" | wc -l )
+
+#echo "There is ${numbl} block(s)"
+#echo ""
+eofbl[0]=${off0}
+n=0
+for bl in $( seq 1 ${numbl} )
+do
+  tmp=$( echo "$blstr" | head -$bl | tail -1 )
+  eofbl[${bl}]=${tmp%:*}
+  n=$(( (${eofbl[${bl}]}-${eofbl[$(( ${bl}-1))]}-${off})/${div} + $n))
+#  echo "bl${bl} : $(( (${eofbl[${bl}]}-${eofbl[$(( ${bl}-1))]}-${off})/${div} ))"
+done
+echo $n

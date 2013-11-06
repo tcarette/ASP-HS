@@ -171,7 +171,7 @@ ncfg ()
 {
 if [ -e $1.c ]
 then
-  rnrcfg $1.c
+  tnrcfg $1.c
 fi
 }
 
