@@ -31,3 +31,9 @@ file names (<root>.<std extension>).
 * functions beginning with D: functions that compute differential effects (first - second)
     * argument 1-3: as above for first state
     * argument 4-6: as above for second state
+
+#### weights (ASTP2K)
+
+Calculate configuration weights and cumulated weights using .l file
+* argument 1: root name of the target
+* argument 2: root name of the .c file containing the configuration to be condsidered
