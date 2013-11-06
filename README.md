@@ -32,14 +32,23 @@ file names (<root>.<std extension>).
     * argument 1-3: as above for first state
     * argument 4-6: as above for second state
 
-#### weights (ASTP2K)
-
-Calculate configuration weights and cumulated weights using .l file
-* argument 1: root name of the target
-* argument 2: root name of the .c file containing the configuration to be condsidered
-
 #### nrcfg (and tnrcfg)
 
 Check number of configuration state functions in .c files (given in argument).
 nrcfg allows several .c files as arguments.
 nrcfg provides #CSF/block, tnrcfg provides the total #CSF.
+
+#### W2C*
+
+Weights to configuration list
+* W2C_ref: read a file containing a set of configurations line by line and form
+           the .c file containing all CSFs of those configurations.
+    * argument 1: <root>.weight file (e.g. std out of weights)
+		* argument 2: number of lines (configurations) consider to form the list
+		* argument 3: term as provided to lsgen
+
+#### weights (ASTP2K)
+
+Calculate configuration weights and cumulated weights using .l file
+* argument 1: root name of the target
+* argument 2: root name of the .c file containing the configuration to be condsidered
