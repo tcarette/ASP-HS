@@ -1,0 +1,77 @@
+#!/bin/bash
+
+if [ ! -e $1 ]
+then
+  echo "$1 do not exists"
+  exit
+fi
+
+nl='
+'
+
+if [ "$4" == 'Ne' ]
+then
+  actc="2${nl}2${nl}6${nl}"
+  orb="3s 3p 3d 4s 4p 4d 4f 5s 5p 5d 5f 5g 6s 6p 6d 6f 6g 6h 7s 7p 7d 7f 7g 7h 7i 8s 8p 8d 8f 8g 8h 8i 8k 9s 9p 9d 9f 9g 9h 9i 9k 9l :s :p :d :f :g :h :i :k :l :m ;s ;p ;d ;f ;g ;h ;i ;k ;l ;m ;n <s <p <d <f <g <h <i <k <l <m <n =s =p =d =f =g =h =i =k =l =m =n ?s ?p ?d ?f ?g ?h ?i ?k ?l ?m ?n >s >p >d >f >g >h >i >k >l >m >n"
+else
+  actc=''
+  orb="1s 2s 2p 3s 3p 3d 4s 4p 4d 4f 5s 5p 5d 5f 5g 6s 6p 6d 6f 6g 6h 7s 7p 7d 7f 7g 7h 7i 8s 8p 8d 8f 8g 8h 8i 8k 9s 9p 9d 9f 9g 9h 9i 9k 9l :s :p :d :f :g :h :i :k :l :m ;s ;p ;d ;f ;g ;h ;i ;k ;l ;m ;n <s <p <d <f <g <h <i <k <l <m <n =s =p =d =f =g =h =i =k =l =m =n ?s ?p ?d ?f ?g ?h ?i ?k ?l ?m ?n >s >p >d >f >g >h >i >k >l >m >n"
+fi
+
+order=""
+if [ -e clist.ref ]
+then
+	echo "WARNING: clist.ref exists. Assuming customized subshell ordering"
+	order="u"
+fi
+
+for i in $( seq 1 $2 )
+do
+
+  act=''
+  line=$( head -$i $1 | tail -1 )
+  echo $line
+  for o in $orb
+  do
+    str=$(echo  $line | grep -o "${o}(.." )
+    if [ ! "$str" == '' ]
+    then
+      occ=${str:4:5}
+    else
+      occ=0
+    fi
+  act=${act}${occ}${nl}
+  done
+
+  a='a'
+  if [ $i == 1 ]
+  then
+    a=''
+  fi
+  act="${act} $4 ${nl} $3 ${nl}9 ${nl} 1 ${nl}${nl}${nl}0${nl}"
+
+lsgen > .bid 2>/dev/null <<!
+${a}
+B
+u
+
+15
+n
+
+
+15
+${actc}${act}
+!
+grep "configuration state" .bid
+rm .bid
+
+mv clist.out clist.inp
+
+lsgen &>/dev/null<<!
+r
+!
+
+mv clist.out clist.inp
+
+done
+mv clist.inp MR$2.c
