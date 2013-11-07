@@ -33,6 +33,17 @@ file names (<root>.<std extension>).
     * argument 1-3: as above for first state
     * argument 4-6: as above for second state
 
+### anaRelCorr_func.sh
+
+Short functions that return difference between parameters computed with GRASP and ATSP2K
+
+* default usage:
+    * argument 1: GRASP file root name.
+    * argument 2: J value in format Int or Int/2.
+    * argument 3: index of level in block J
+    * argument 4: ATSP2K file root name
+    * argument 5: J value in format Int or Int/2.
+
 ### nrcfg (and tnrcfg)
 
 Check number of configuration state functions in .c files (given in argument).
