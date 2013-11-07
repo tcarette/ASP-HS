@@ -48,13 +48,14 @@ Calculate configuration weights and cumulated weights using .l file
 
 Weights to configuration list
 
-##### W2C_ref: read a file containing a set of configurations line by line and form
+##### W2C_ref (ATSP):
+Read a file containing a set of configurations line by line and form
 the .c file containing all CSFs of those configurations for a specific LS
 		* argument 1: <root>.weight file (e.g. std out of weights)
 		* argument 2: number of lines (configurations) consider to form the list
 		* argument 3: term as provided to lsgen
 
-##### W2BPC_ref:
+##### W2BPC_ref (ATSP):
 Read a file containing a set of configurations line by line and form
 the .c file containing all CSFs of those configurations for a range of Js
 in LS coupling
@@ -63,7 +64,16 @@ in LS coupling
 * argument 3: J min
 * argument 4: J max
 
-##### W2BPC_SDred:
+##### W2RC_ref (GRASP):
+Read a file containing a set of configurations line by line and form
+the .c file containing all CSFs of those configurations for a range of Js
+in jj coupling
+* argument 1: <root>.weight file (e.g. std out of weights)
+* argument 2: number of lines (configurations) consider to form the list
+* argument 3: J min
+* argument 4: J max
+
+##### W2BPC_SDred (ATSP): (similar to extend with Breit option)
 Read a file containing a set of configurations line by line and form
 the .c file containing all CSFs interacting with those configurations
 for a range of Js in LS coupling

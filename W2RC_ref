@@ -48,18 +48,17 @@ do
   then
     a=''
   fi
-  act="${act} $4 ${nl} $3 ${nl}9 ${nl} 1 ${nl}${nl}${nl}0${nl}"
+  act="${act} $3 $4 ${nl} 0${nl}"
 
-lsgen > .bid 2>/dev/null <<!
+jjgen > .bid 2>/dev/null <<!
 ${a}
-B
 ${u}
-
 15
 n
 
 
 15
+
 ${actc}${act}
 !
 grep "configuration state" .bid
@@ -67,11 +66,5 @@ rm .bid
 
 mv clist.out clist.inp
 
-lsgen &>/dev/null<<!
-r
-!
-
-mv clist.out clist.inp
-
 done
-mv clist.inp MR$2_BPCI.c
+mv clist.inp MR$2_RCI.c
