@@ -1,4 +1,6 @@
 #!/bin/bash
+#    Copyright (C) 2013 Thomas Carette
+
 
 grep 'DeltaE' $1.err > bid
 cat bid > bid2

@@ -1,4 +1,6 @@
 #! /bin/bash -l
+#    Copyright (C) 2013 Thomas Carette
+
 #
 STATE="1${nl}1${nl}1"
 
