@@ -1,0 +1,135 @@
+#!/bin/bash
+
+if [ ! -e $1 ]
+then
+  echo "$1 do not exists"
+  exit
+fi
+
+nl='
+'
+s[4]=4
+s[5]=5
+s[6]=6
+s[7]=7
+s[8]=8
+s[9]=9
+s[10]=':'
+s[11]=';'
+s[12]='<'
+s[13]='='
+s[14]='?'
+s[15]='>'
+
+if [ $6 -gt 10 ]
+then
+	nlm=10
+else
+	nlm=$6
+fi
+
+lm='spdfghiklmn'
+for i in $( seq 1 15 )
+do
+	im=$(( i - 1 ))
+	if [ $im -gt $nlm ]
+	then
+	  lmax[$i]=${lm:$nlm:1}
+	else
+	  lmax[$i]=${lm:$im:1}
+	fi
+done
+
+j=$5
+
+echo "------------------"
+echo ${j}_$2
+echo "------------------"
+
+if [ -e ${j}_$2.c ]
+then
+  continue
+fi
+
+if [ "$4" == 'Ne' ]
+then
+  actc="2${nl}2${nl}6${nl}"
+  orb="3s 3p 3d 4s 4p 4d 4f 5s 5p 5d 5f 5g 6s 6p 6d 6f 6g 6h 7s 7p 7d 7f 7g 7h 7i 8s 8p 8d 8f 8g 8h 8i 8k 9s 9p 9d 9f 9g 9h 9i 9k 9l :s :p :d :f :g :h :i :k :l :m ;s ;p ;d ;f ;g ;h ;i ;k ;l ;m ;n <s <p <d <f <g <h <i <k <l <m <n =s =p =d =f =g =h =i =k =l =m =n ?s ?p ?d ?f ?g ?h ?i ?k ?l ?m ?n >s >p >d >f >g >h >i >k >l >m >n"
+  orb=$( echo ${orb%${s[$j]}*} | sed 's/.[h,i,k,l,m,n]//g' )
+else
+  actc=''
+  orb="1s 2s 2p 3s 3p 3d 4s 4p 4d 4f 5s 5p 5d 5f 5g 6s 6p 6d 6f 6g 6h 7s 7p 7d 7f 7g 7h 7i 8s 8p 8d 8f 8g 8h 8i 8k 9s 9p 9d 9f 9g 9h 9i 9k 9l :s :p :d :f :g :h :i :k :l :m ;s ;p ;d ;f ;g ;h ;i ;k ;l ;m ;n <s <p <d <f <g <h <i <k <l <m <n =s =p =d =f =g =h =i =k =l =m =n ?s ?p ?d ?f ?g ?h ?i ?k ?l ?m ?n >s >p >d >f >g >h >i >k >l >m >n"
+  orb=$( echo ${orb%${s[$j]}*} | sed 's/.[h,i,k,l,m,n]//g' )
+fi
+
+if [ ! -e MR$2.c ]
+then
+  echo "Missing" MR$2.c
+	exit
+fi
+
+cp MR$2.c mrlist
+
+order=""
+if [ -e clist.ref ]
+then
+	echo "WARNING: clist.ref exists. Assuming customized subshell ordering"
+	order="u"
+fi
+
+for i in $( seq 1 $2 )
+do
+
+  act=''
+  line=$( head -$i $1 | tail -1 )
+  echo $line
+  for o in $orb
+  do
+    str=$(echo  $line | grep -o "${o}(.." )
+    if [ ! "$str" == '' ]
+    then
+      occ=${str:4:5}
+    else
+      occ=0
+    fi
+  act=${act}${occ}${nl}
+  done
+
+  a='a'
+  if [ $i == 1 ]
+  then
+    a=''
+  fi
+  act="${act} $4 ${nl} $3 ${nl} 9 ${nl} 1 ${nl}${nl}${nl}2${nl}"
+
+lsgen <<! # > .bid 2>/dev/null <<!
+${a}
+B
+${u}
+
+$j
+${lmax[$j]}
+
+
+$j
+${actc}${act}
+!
+grep "configuration state" .bid
+rm .bid
+
+echo "reducing..."
+mv clist.out cfg.inp
+lsreduce # >.bid
+grep "configuration state" .bid
+rm .bid
+mv clist.out clist.inp
+
+echo "restoring order..."
+lsgen <<! # &>/dev/null<<!
+r
+!
+mv clist.out clist.inp
+
+done
+
+mv clist.inp ${j}_$2.c
