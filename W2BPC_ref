@@ -53,7 +53,7 @@ do
 lsgen > .bid 2>/dev/null <<!
 ${a}
 B
-u
+${u}
 
 15
 n

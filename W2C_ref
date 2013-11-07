@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ ! -e $1 ]
 then
   echo "$1 do not exists"
@@ -53,7 +55,7 @@ do
 lsgen > .bid 2>/dev/null <<!
 ${a}
 
-u
+${u}
 
 15
 n
