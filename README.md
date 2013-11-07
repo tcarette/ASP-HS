@@ -3,6 +3,7 @@ ASP-HS
 
 Atomic structure packages (ATSP2K, GRASP2K) helper scripts
 
+## General Purpose Scripts
 
 ### anaATSP2K_func.sh
 
@@ -92,5 +93,13 @@ for a range of Js in LS coupling
 * argument 5: n max
 * argument 6: l max (integer)
 
+## Examples and templates of useful scripts.
 
+Most of the following scripts cannot be used as black boxes and usually necessitate
+modifications for specific cases.
 
+### Automatic_sub_Hydra/*
+
+Automatically submit jobs executing various programs if the necessary input files are ok.
+Requested ressources are set as linear functions of the total number of CSF in the .c list.
+* argument 1: label for the calculation (also used for the WORK directory)

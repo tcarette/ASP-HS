@@ -1,0 +1,73 @@
+#! /bin/bash -l
+#
+STATE="1${nl}1${nl}1"
+
+####################################################
+
+HASH='#'
+
+HOME=$(pwd)
+
+for i in *.m
+do
+
+rlevels ${i} >/dev/null 2>&1 || continue
+
+CONFIG=${i%*.m}
+
+if [ -e ${CONFIG}.cm ]
+then
+  continue
+fi
+
+echo $i
+
+TMP=${TMPDIR}/RCI${1}/${CONFIG}
+OUT=${WORKDIR}
+
+n=$(tnrcfg ${CONFIG}.c)
+
+MEM=$(( ${n}/25000 + 1))
+FILE=$(( ${n}/10000 +1 ))
+TIME=$(( ${n}/5000 + 1 ))
+
+nl='
+'
+
+echo "
+${HASH}!/bin/bash -l
+${HASH}PBS -o out
+${HASH}PBS -e err
+${HASH}PBS -N ${1}rci${CONFIG}
+${HASH}PBS -l mem=${MEM}gb
+${HASH}PBS -l file=${FILE}gb
+${HASH}PBS -l walltime=${TIME}:00:00:00
+
+mkdir -p $TMP
+cd $TMP
+
+ln -s ${HOME}/isodata .
+ln -s ${HOME}/${CONFIG}.c bid.c
+ln -s ${HOME}/${CONFIG}.w bid.w
+
+rci3 &> ${OUT}/\${PBS_JOBID%*.mn01.usr.hydra.vub.ac.be}.${n}.rci.out <<!
+y
+bid
+y
+y
+1.e-6
+y
+y
+y
+n
+${STATE}
+!
+mv bid.cm ${HOME}/${CONFIG}.cm
+mv bid.csum ${HOME}/${CONFIG}.csum
+
+" > rci.sh
+
+touch ${CONFIG}.csum ${CONFIG}.cm
+qsub rci.sh
+
+done

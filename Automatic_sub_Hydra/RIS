@@ -1,0 +1,62 @@
+#! /bin/bash -l
+
+HASH='#'
+
+HOME=$(pwd)
+
+for i in *.cm
+do
+
+rlevels ${i} >/dev/null 2>&1 || continue
+
+CONFIG=${i%*.cm}
+
+if [ -e ${CONFIG}.ci ]
+then
+  continue
+fi
+
+echo $i
+
+TMP=${TMPDIR}/RIS${1}/${CONFIG}
+OUT=${WORKDIR}
+
+n=$(rnrcfg ${CONFIG}.c)
+
+MEM=$(( ${n}/150000 + 1))
+FILE=$(( ${MEM} * 10 ))
+TIME=$(( ${n}/40000 + 1 ))
+
+
+echo "
+${HASH}!/bin/bash -l
+${HASH}PBS -o out
+${HASH}PBS -e err
+${HASH}PBS -N ${1}ris${CONFIG}
+${HASH}PBS -l mem=${MEM}gb
+${HASH}PBS -l file=${FILE}gb
+${HASH}PBS -l walltime=${TIME}:00:00:00
+
+mkdir -p $TMP
+cd $TMP
+
+ln -s ${HOME}/isodata .
+ln -s ${HOME}/${CONFIG}.c bid.c
+ln -s ${HOME}/${CONFIG}.cm bid.cm
+ln -s ${HOME}/${CONFIG}.w bid.w
+
+ris3 &> ${OUT}/\${PBS_JOBID%*.mn01.usr.hydra.vub.ac.be}.${n}.ris.out <<!
+y
+bid
+y
+y
+n
+!
+mv bid.ci ${HOME}/${CONFIG}.ci
+
+" > ris.sh
+
+touch ${CONFIG}.ci
+qsub ris.sh
+
+done
