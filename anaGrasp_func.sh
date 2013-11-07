@@ -44,7 +44,7 @@ check ()
 {
 if [ "$1" == "" ]
 then
- echo " # "
+ echo " - "
 else
  echo $1
 fi
@@ -218,7 +218,7 @@ fi
 check $str
 }
 
-hfsA ()
+rhfsA ()
 {
 local n=$( inp $3 '.' )
 if [ -e $1.ch ]
@@ -229,7 +229,7 @@ fi
 check $str
 }
 
-hfsB ()
+rhfsB ()
 {
 local n=$( inp $3 '.' )
 if [ -e $1.ch ]
@@ -237,7 +237,7 @@ then
   local str=$( grep -A50 "Interaction constants" $1.ch | grep "^ *$n *$2 [-,+]\?" | tail -1 | gawk '{ print $5 }' )
   local str=$(echo "${str}" | sed -e 's/[D]+*/\*10\^/' |  bc -l)
 fi
-Check $str
+check $str
 }
 
 pipj ()
@@ -250,6 +250,18 @@ then
 fi
 check $str
 }
+
+rsmsp ()
+{
+local n=$( inp $3 '.' )
+if [ -e $1.ci ]
+then
+  local str=$( awk '/Specific mass shift/,/Electron density in atomic units/' $1.ci | grep "^ *$n *$2 [-,+]\?" | head -1 | gawk '{ print $6 }' )
+  local str=$(echo "${str}" | sed -e 's/[D]+*/\*10\^/' |  bc -l)
+fi
+check $str
+}
+
 
 smsK ()
 {

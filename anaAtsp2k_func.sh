@@ -28,7 +28,7 @@ check ()
 {
 if [ "$1" == "" ]
 then
- echo " --- "
+ echo "   -   "
 else
  echo $1
 fi
@@ -160,7 +160,7 @@ then
   else
     echo $( tail -1 $1.err | gawk '{ print $3 }' )
   fi
-else echo '     -     '
+else echo '     ---     '
 fi
 }
 
@@ -224,42 +224,7 @@ check $str
 
 ###################
 
-Dencmkmchf ()
-{
-local a=$( enmchf $1 )
-local b=$( enmchf $2 )
-if $( isnumber $a $b )
-then
-  local str=$(echo "219474.63*($a - $b)" | bc -l)
-fi
-check $str
-}
-Dencmkbpci ()
-{
-local a=$( enbpci $1 $2 )
-local b=$( enbpci $3 $4 )
-if $( isnumber $a $b )
-then
-  local str=$(echo "219474.63*($a - $b)" | bc -l)
-fi
-check $str
-}
-
-
-for f in enmchf smsp
-do
-eval "D$f ()
-{
-local a=\$( $f \$1 )
-local b=\$( $f \$2 )
-if \$( isnumber \$a \$b )
-then
-  local str=\$(echo \$a - \$b | bc -l)
-fi
-echo \$( check \$str )
-}"
-done
-for f in enbpci
+for f in enbpci enmchf smsp
 do
 eval "D$f ()
 {
@@ -273,11 +238,26 @@ echo \$( check \$str )
 }"
 done
 
+for f in encmkmchf encmkbpci
+do
+eval "D$f ()
+{
+local a=\$( $f \$1 \$2 )
+local b=\$( $f \$3 \$4 )
+if \$( isnumber \$a \$b )
+then
+  local str=\$(echo \"219474.63*(\$a - \$b)\" | bc -l)
+fi
+echo \$( check \$str )
+}"
+done
+
+
 
 DKsmsmchfTHz ()
 {
-local a=$( smsp $1 )
-local b=$( smsp $2 )
+local a=$( smsp $1 $2 )
+local b=$( smsp $3 $4 )
 if $( isnumber $a $b )
 then
   local str=$(echo "-3.60931615819233207436*($a - $b)" | bc -l)  # 6579.683920722 * -.99995377536420009574 * 0.00054858
