@@ -1,0 +1,53 @@
+#!/bin/bash
+
+grep 'DeltaE' $1.err > bid
+cat bid > bid2
+tail -1 bid >> bid2
+
+echo "$(\
+python<<!
+i=0
+f=open ('bid', 'r')
+f2=open ('bid2', 'r')
+f=f.readlines ()
+f2=f2.readlines ()
+limen=0
+for str1 in f :
+  i=i+1
+  str1=str1[53:72]
+  str2=f2[i][53:72]
+  dif=float(str2)-float(str1)
+  print "%s %s %s"  % (i, dif, str1)
+  if limen > float(str1) :
+    limen=float(str1)
+print ""
+print ""
+print "min en %s" % (limen)
+!
+)" > CONV
+
+limen=$( tail -1 CONV | gawk '{ print $3}' )
+
+gnuplot<<!
+set terminal postscript enhanced portrait 24
+set output "CONV.eps"
+
+set size 3.4,3.4
+
+set multiplot
+
+set size 3.4,1.7
+set origin 0,1.7
+set logscale y
+plot \
+"CONV" index 0 using 1:(\$3-${limen}) with p ps 2 notitle
+
+set size 3.4,1.7
+set origin 0,0
+#unset logscale y
+plot \
+"CONV" index 0 using 1:(\$2*\$2) with p ps 2 notitle
+!
+#"CONV" index 0 using 1:2 with p ps 2 notitle
+
+epstopdf --outfile="CONV.pdf" "CONV.eps"

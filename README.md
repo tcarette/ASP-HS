@@ -38,6 +38,14 @@ Check number of configuration state functions in .c files (given in argument).
 nrcfg allows several .c files as arguments.
 nrcfg provides #CSF/block, tnrcfg provides the total #CSF.
 
+### PLOT_conv_mchf
+
+Read file containing stderr of mchf (ATSP2K) and generate pdf and eps of the convergence of
+the energy and of the squared energy increment as a function of the iteration number.
+Note: it would probably work if the stdout and stderr are saved in the same file but
+it is not tested.
+* argument 1: root file name (reads <root>.err)
+
 ### weights (ASTP2K)
 
 Calculate configuration weights and cumulated weights using .l file
