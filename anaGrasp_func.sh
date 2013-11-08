@@ -44,7 +44,7 @@ check ()
 {
 if [ "$1" == "" ]
 then
- echo " - "
+ echo " -- "
 else
  echo $1
 fi

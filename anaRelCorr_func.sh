@@ -23,7 +23,12 @@ DrhfsA ()
 	then
 		if [ -e $4.h ]
 		then
-			local str=$( echo "$( rhfsA $1 $2 $3 )0 - ($( hfsA $4 $5 )0)" | bc -l )
+			local a=$( rhfsA $1 $2 $3 )
+			local b=$( hfsA $4 $5 )
+			if $(isnumber $a $b)
+			then
+				local str=$( echo "$a - ($b)" | bc -l )
+			fi
 		fi
 	fi
 	check $str
@@ -34,7 +39,12 @@ DrhfsB ()
 	then
 		if [ -e $4.h ]
 		then
-			local str=$( echo "$( rhfsB $1 $2 $3 )0 - ($( hfsB $4 $5 )0)" | bc -l )
+			local a=$( rhfsB $1 $2 $3 )
+			local b=$( hfsB $4 $5 )
+			if $(isnumber $a $b)
+			then
+				local str=$( echo "$a - ($b)" | bc -l )
+			fi
 		fi
 	fi
 	check $str
@@ -45,7 +55,12 @@ Drsmsp ()
 	then
 		if [ -e $4.s ]
 		then
-			local str=$( echo "$( rsmsp $1 $2 $3 )0 - ($( smsp $4 )0)" | bc -l )
+			local a=$( rsmsp $1 $2 $3 )
+			local b=$( smsp $4 $5 )
+			if $(isnumber $a $b)
+			then
+				local str=$( echo "$a -($b)" | bc -l )
+			fi
 		fi
 	fi
 	check $str
