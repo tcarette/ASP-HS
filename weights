@@ -63,17 +63,17 @@ else
 	gawk '{ if ( FNR %2 ==1 ) { print $0 } }' $1.c | grep ')' | uniq > .ref.weight
 fi
 
-if $( grep -q "0\." ref.weight )
+if $( grep -q "0\." .ref.weight )
 then
   rm bid
   touch bid
-  for li in $( seq 1 $( wc ref.weight | gawk '{print $1}' ) )
+  for li in $( seq 1 $( wc .ref.weight | gawk '{print $1}' ) )
   do
-    tmp=$( head -${li} ref.weight | tail -1 )
+    tmp=$( head -${li} .ref.weight | tail -1 )
     lgth=$( echo "8*$( echo $tmp | grep -o ")" | wc | gawk '{print $1}' ) " | bc -l )
     echo "${tmp:0:${lgth}}" >> bid
   done
-  cat bid | uniq > ref.weight
+  cat bid | uniq > .ref.weight
 fi
 
 for linenr in $( seq 1 $(( $( cat .ref.weight | wc -l ) )) )
