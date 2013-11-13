@@ -1,6 +1,6 @@
 #!/bin/bash
 #    Copyright (C) 2013 Thomas Carette
-
+source $(which anaCommon.sh)
 
 if [ "$( type -t rhfsA )" == "" ]
 then

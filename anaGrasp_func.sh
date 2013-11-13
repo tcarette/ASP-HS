@@ -1,33 +1,10 @@
 #!/bin/bash
 #    Copyright (C) 2013 Thomas Carette
-
+source $(which anaCommon.sh)
 
 inp ()
 {
 	echo $1
-}
-
-isnumber ()
-{
-ok=0
-for i in "$@"
-do
-  if ! [[ "$i" =~ ^[-]?[0-9]+?([.][0-9]+)?$ ]]
-  then
-    ok=1
-    break
-  fi
-done
-return $ok
-}
-
-compM ()
-{
-if [ "$1" != "" ]
-then
-#  echo "${1}*3609.48" | sed -e 's/[D]+*/\*10\^/' |  bc -l
-  echo "${1}          " | sed -e 's/[D]+*/\*10\^/' |  bc -l
-fi
 }
 
 compF ()
@@ -35,18 +12,6 @@ compF ()
 if [ "$1" != "" ]
 then
   echo "${1}*2.34965/3*29*2*3.1416" | sed -e 's/[D]+*/\*10\^/' |  bc -l
-fi
-}
-
-
-
-check ()
-{
-if [ "$1" == "" ]
-then
- echo " -- "
-else
- echo $1
 fi
 }
 

@@ -1,5 +1,6 @@
 #!/bin/bash
 #    Copyright (C) 2013 Thomas Carette
+source $(which anaCommon.sh)
 
 isnumber ()
 {
@@ -13,25 +14,6 @@ do
   fi
 done
 return $ok
-}
-
-compM ()
-{
-if [ "$1" != "" ]
-then
-  echo "${1}*3609.4824" | sed -e 's/[D]+*/\*10\^/' |  bc -l
-#  echo "${1}          " | sed -e 's/[D]+*/\*10\^/' |  bc -l
-fi
-}
-
-check ()
-{
-if [ "$1" == "" ]
-then
- echo "   --   "
-else
- echo $1
-fi
 }
 
 CONVstart ()
