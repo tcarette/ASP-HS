@@ -3,7 +3,8 @@ ASP-HS
 
 Atomic structure packages (ATSP2K, GRASP2K) helper scripts
 
-## General Purpose Scripts
+General Purpose Scripts
+-----------------------
 
 ### anaATSP2K_func.sh
 
@@ -11,14 +12,14 @@ Short functions that return various floats from ATSP2K output assuming standard
 file names (<root>.<std extension>).
 
 * default usage:
-    * argument 1: file root name.
-    * argument 2 (for hfs and bpci): J1 value in format Int or Int/2.
-    * argument 3 (for hfs): J2 value in format Int or Int/2
+		* argument 1: file root name.
+		* argument 2 (for hfs and bpci): J1 value in format Int or Int/2.
+		* argument 3 (for hfs): J2 value in format Int or Int/2
 * functions beginning with D: functions that compute differential effects (first - second)
-    * argument 1: first state file root name.
-    * argument 2: J value for first state (in format Int or Int/2.)
-    * argument 3: second state file root name.
-    * argument 4: J value for second state (in format Int or Int/2.)
+		* argument 1: first state file root name.
+		* argument 2: J value for first state (in format Int or Int/2.)
+		* argument 3: second state file root name.
+		* argument 4: J value for second state (in format Int or Int/2.)
 
 ### anaGRASP_func.sh
 
@@ -26,23 +27,23 @@ Short functions that return various floats from GRASP2K output assuming standard
 file names (<root>.<std extension>).
 
 * default usage:
-    * argument 1: file root name.
-    * argument 2: J value in format Int or Int/2.
-    * argument 3: index of the level in the J block
+		* argument 1: file root name.
+		* argument 2: J value in format Int or Int/2.
+		* argument 3: index of the level in the J block
 * functions beginning with D: functions that compute differential effects (first - second)
-    * argument 1-3: as above for first state
-    * argument 4-6: as above for second state
+		* argument 1-3: as above for first state
+		* argument 4-6: as above for second state
 
 ### anaRelCorr_func.sh
 
 Short functions that return difference between parameters computed with GRASP and ATSP2K
 
 * default usage:
-    * argument 1: GRASP file root name.
-    * argument 2: J value in format Int or Int/2.
-    * argument 3: index of level in block J
-    * argument 4: ATSP2K file root name
-    * argument 5: J value in format Int or Int/2.
+		* argument 1: GRASP file root name.
+		* argument 2: J value in format Int or Int/2.
+		* argument 3: index of level in block J
+		* argument 4: ATSP2K file root name
+		* argument 5: J value in format Int or Int/2.
 
 ### nrcfg (and tnrcfg)
 
@@ -104,7 +105,8 @@ for a range of Js in LS coupling
 * argument 5: n max
 * argument 6: l max (integer)
 
-## Examples and templates of useful scripts.
+Examples and templates of useful scripts
+----------------------------------------
 
 Most of the following scripts cannot be used as black boxes and usually necessitate
 modifications for specific cases.
@@ -114,3 +116,7 @@ modifications for specific cases.
 Automatically submit jobs executing various programs if the necessary input files are ok.
 Requested ressources are set as linear functions of the total number of CSF in the .c list.
 * argument 1: label for the calculation (also used for the WORK directory)
+
+### Table_generators/*
+
+Self explanatory names. No argument needed. See headers to edit.

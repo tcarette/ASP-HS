@@ -1,0 +1,73 @@
+#!/bin/bash
+#    Copyright (C) 2013 Thomas Carette
+
+#####################################################
+#
+# Edit this
+#
+## iterators:
+abscisse="3 4 5 6 7 8 9"      # tabulated layers
+blocks='_red_1' '_red_2'      # label of the calculations (e.g. 8_red)
+J1s="'1/2 +'"                 # considered Js for first state
+J2s="'1/2 -' '3/2 -'"         # considered Js for second state
+operateurs="enc msK Den Denc Dencmk DmsK DF"
+## index:
+I1=1                          # index of the first level in the J block
+I2=1                          # index of the secnd level in the J block
+#####################################################
+
+source ~/bin/anaGrasp_func.sh
+
+for t in $blocks
+do
+
+	echo '-'
+
+	echo "$(\
+
+		for J1 in  $J1s
+		do
+			for J2 in $J2s
+			do
+				bid="$(\
+				for Op in ${operateurs}
+				do
+					if [ "${Op:0:1}" == 'D' ]
+					then
+						echo "$Op & "
+					else
+						echo "$Op$(echo $J1 | tr -d ' ' ) & $Op$(echo $J2 | tr -d ' ' ) & "
+					fi
+				done )"
+				echo "model & " $bid
+				for i in ${abscisse}
+				do
+					temp=${bl}${i}${red}
+					Dtemp=${NeuDir}${i}${red1}
+					echo "${i} &" $(\
+						for Op in ${operateurs}
+						do
+							if [ "${Op:0:1}" == 'D' ]
+							then
+								echo $(\
+									echo "$( ${Op} ${Dtemp} "$J2" $I2 ${temp} "$J1" $I1 ) & "
+								)
+							else
+								echo $(\
+									echo "$( ${Op} ${temp} "$J1" $I1 ) & "
+								)
+								if [[ ! ${Op} =~ CONV ]]
+								then
+									echo $(\
+										echo "$( ${Op} ${Dtemp} "$J2" $I2 ) & "
+									)
+								fi
+							fi
+						done
+					)
+				done
+			done
+		done
+	)" | column -t  | sed 's/& *$/\\\\ /g'
+
+done

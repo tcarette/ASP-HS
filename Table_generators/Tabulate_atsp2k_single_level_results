@@ -1,0 +1,47 @@
+#!/bin/bash
+#    Copyright (C) 2013 Thomas Carette
+
+
+
+#####################################################
+#
+# Edit this
+#
+abscisse="3 4 5 6 7 8 9"      # tabulated layers
+blocks="_NR _BPCI"            # label of the calculations (e.g. 8_NR)
+Js='2'                        # considered Js
+operateurs="conv enmchf smsp hfsA hfsal hfsad hfsac"
+
+#####################################################
+
+source $(which anaAtsp2k_func.sh)
+
+for red in ${blocks}
+do
+
+echo "$(\
+
+echo '-'
+
+bid="$( for Op in ${operateurs}
+do
+	echo "$Op & "
+done )"
+
+echo "model &" $bid
+
+for i in ${abscisse}
+do
+	for J in $Js
+	do
+		temp=${i}${red}
+		echo ${temp}_${J} '&' $(\
+			for Op in ${operateurs}
+			do
+				echo "$( ${Op} ${temp} "" ${J} ${J} ) & "
+			done\
+		)
+	done
+done\
+ )" | column -t  | sed 's/& *$/\\\\ /g'
+done
