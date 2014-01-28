@@ -44,10 +44,10 @@ do
   echo $line
   for o in $orb
   do
-    str=$(echo  $line | grep -o "${o}(.." )
+    str=$(echo  $line | grep -o "${o} *( *[0-9]* *)" )
     if [ ! "$str" == '' ]
     then
-      occ=${str:4:5}
+      occ=$(echo $str | sed -e 's/.*(\(.*\))/\1/')
     else
       occ=0
     fi
