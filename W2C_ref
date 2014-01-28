@@ -1,6 +1,15 @@
 #!/bin/bash
 #    Copyright (C) 2013 Thomas Carette
 
+dev='/dev/null'
+while getopts "v" Option
+do
+   case $Option in
+   v     ) dev='/dev/stdout'; VERBOSE=true;;
+   *     ) echo "Unimplemented option chosen.";;   # DEFAULT
+   esac
+done
+shift
 
 if [ ! -e $1 ]
 then
@@ -54,7 +63,8 @@ do
     act=${act}0
   fi
 
-lsgen > .bid 2>/dev/null <<!
+echo $act
+lsgen >.out 2>${dev} <<!
 ${a}
 
 ${u}
@@ -66,12 +76,22 @@ n
 15
 ${actc}${act}
 !
-grep "configuration state" .bid
-rm .bid
+
+if $VERBOSE
+then
+	tail .out
+fi
+grep "configuration state" .out
+rm .out
 
 mv clist.out clist.inp
 
-lsgen &>/dev/null<<!
+if $VERBOSE
+then
+	echo "restore order"
+fi
+
+lsgen &>${dev}<<!
 r
 !
 
