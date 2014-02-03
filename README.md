@@ -55,6 +55,7 @@ nrcfg provides #CSF/block, tnrcfg provides the total #CSF.
 
 Read file containing stderr of mchf (ATSP2K) and generate pdf and eps of the convergence of
 the energy and of the squared energy increment as a function of the iteration number.
+
 Note: it would probably work if the stdout and stderr are saved in the same file but
 it is not tested.
 * argument 1: root file name (reads <root>.err)
@@ -72,6 +73,7 @@ Weights to configuration list
 ##### W2C_ref (ATSP):
 Read a file containing a set of configurations line by line and form
 the .c file containing all CSFs of those configurations for a specific LS
+
 Note: this script is better behaved that the other of his family. This is due to a lot of
 line duplication between them.
 * argument 1: <root>.weight file (e.g. std out of weights)
