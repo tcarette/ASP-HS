@@ -1,11 +1,20 @@
 #!/bin/bash
-#    Copyright (C) 2013 Thomas Carette
+#		Copyright (C) 2013 Thomas Carette
 
+dev='/dev/null'
+VERBOSE=false
+while getopts "v" Option
+do
+	 case $Option in
+	 v		 ) dev='/dev/stdout'; VERBOSE=true; shift;;
+	 *		 ) echo "Unimplemented option chosen.";;	 # DEFAULT
+	 esac
+done
 
 if [ ! -e $1 ]
 then
-  echo "$1 do not exists"
-  exit
+	echo "$1 do not exists"
+	exit
 fi
 
 nl='
@@ -13,11 +22,11 @@ nl='
 
 if [ "$4" == 'Ne' ]
 then
-  actc="2${nl}2${nl}6${nl}"
-  orb="3s 3p 3d 4s 4p 4d 4f 5s 5p 5d 5f 5g 6s 6p 6d 6f 6g 6h 7s 7p 7d 7f 7g 7h 7i 8s 8p 8d 8f 8g 8h 8i 8k 9s 9p 9d 9f 9g 9h 9i 9k 9l :s :p :d :f :g :h :i :k :l :m ;s ;p ;d ;f ;g ;h ;i ;k ;l ;m ;n <s <p <d <f <g <h <i <k <l <m <n =s =p =d =f =g =h =i =k =l =m =n ?s ?p ?d ?f ?g ?h ?i ?k ?l ?m ?n >s >p >d >f >g >h >i >k >l >m >n"
+	actc="2${nl}2${nl}6${nl}"
+	orb="3s 3p 3d 4s 4p 4d 4f 5s 5p 5d 5f 5g 6s 6p 6d 6f 6g 6h 7s 7p 7d 7f 7g 7h 7i 8s 8p 8d 8f 8g 8h 8i 8k 9s 9p 9d 9f 9g 9h 9i 9k 9l :s :p :d :f :g :h :i :k :l :m ;s ;p ;d ;f ;g ;h ;i ;k ;l ;m ;n <s <p <d <f <g <h <i <k <l <m <n =s =p =d =f =g =h =i =k =l =m =n ?s ?p ?d ?f ?g ?h ?i ?k ?l ?m ?n >s >p >d >f >g >h >i >k >l >m >n"
 else
-  actc=''
-  orb="1s 2s 2p 3s 3p 3d 4s 4p 4d 4f 5s 5p 5d 5f 5g 6s 6p 6d 6f 6g 6h 7s 7p 7d 7f 7g 7h 7i 8s 8p 8d 8f 8g 8h 8i 8k 9s 9p 9d 9f 9g 9h 9i 9k 9l :s :p :d :f :g :h :i :k :l :m ;s ;p ;d ;f ;g ;h ;i ;k ;l ;m ;n <s <p <d <f <g <h <i <k <l <m <n =s =p =d =f =g =h =i =k =l =m =n ?s ?p ?d ?f ?g ?h ?i ?k ?l ?m ?n >s >p >d >f >g >h >i >k >l >m >n"
+	actc=''
+	orb="1s 2s 2p 3s 3p 3d 4s 4p 4d 4f 5s 5p 5d 5f 5g 6s 6p 6d 6f 6g 6h 7s 7p 7d 7f 7g 7h 7i 8s 8p 8d 8f 8g 8h 8i 8k 9s 9p 9d 9f 9g 9h 9i 9k 9l :s :p :d :f :g :h :i :k :l :m ;s ;p ;d ;f ;g ;h ;i ;k ;l ;m ;n <s <p <d <f <g <h <i <k <l <m <n =s =p =d =f =g =h =i =k =l =m =n ?s ?p ?d ?f ?g ?h ?i ?k ?l ?m ?n >s >p >d >f >g >h >i >k >l >m >n"
 fi
 
 order=""
@@ -27,34 +36,36 @@ then
 	order="u"
 fi
 
+ADDING=false
 for i in $( seq 1 $2 )
 do
+	echo 
 
-  act=''
-  line=$( head -$i $1 | tail -1 )
-  echo $line
-  for o in $orb
-  do
-    str=$(echo  $line | grep -o "${o}(.." )
-    if [ ! "$str" == '' ]
-    then
-      occ=${str:4:5}
-    else
-      occ=0
-    fi
-  act=${act}${occ}${nl}
-  done
+	act=''
+	line=$( head -$i $1 | tail -1 )
+	echo $line
+	for o in $orb
+	do
+		str=$(echo	$line | grep -o "${o} *( *[0-9]* *)" )
+		if [ ! "$str" == '' ]
+		then
+			occ=$(echo $str | sed -e 's/.*(\(.*\))/\1/')
+		else
+			occ=0
+		fi
+	act=${act}${occ}${nl}
+	done
 
-  a='a'
-  if [ $i == 1 ]
-  then
-    a=''
-    act=${act}${3}${nl}0${nl}${nl}
-  else
-    act=${act}0
-  fi
+	a='a'
+	if $ADDING
+	then
+		act=${act}0
+	else
+		a=''
+		act=${act}${3}${nl}0${nl}${nl}
+	fi
 
-lsgen > .bid 2>/dev/null <<!
+lsgen >.out 2>${dev} <<!
 ${a}
 
 ${u}
@@ -66,16 +77,36 @@ n
 15
 ${actc}${act}
 !
-grep "configuration state" .bid
-rm .bid
 
-mv clist.out clist.inp
+if $VERBOSE
+then
+	tail .out
+fi
+grep "configuration state" .out
+if ! $(grep -q "configuration state" .out)
+then
+	echo "  lsgen crashed."
+	echo "  You can check if the consistent with the number of electrons."
+	echo "  You can also run the script with the flag -v"
+	echo "  continue..."
+fi
+rm .out
 
-lsgen &>/dev/null<<!
+if [ -e clist.out ]&&$( grep -q '(' clist.out )
+then
+	ADDING=true
+	mv clist.out clist.inp
+	if $VERBOSE
+	then
+		echo "restore order"
+	fi
+
+lsgen &>${dev}<<!
 r
 !
 
-mv clist.out clist.inp
+	mv clist.out clist.inp
+fi
 
 done
 mv clist.inp MR$2.c
