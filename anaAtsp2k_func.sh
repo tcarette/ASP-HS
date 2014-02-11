@@ -69,6 +69,36 @@ fi
 check $str
 }
 
+smsK ()
+{
+if [ -e $1.s ]
+then
+  local str=$( smsp $1 $2 )
+  local str=$( compM $str )
+fi
+check $str
+}
+
+nmsK ()
+{
+if [ -e $1.s ]
+then
+  local str=$( tail -2 $1.s | head -1 | gawk '{ print $2 }' )
+  local str=$( compM $str )
+fi
+check $str
+}
+
+msK ()
+{
+local a=$( nmsK $1 $2 )
+local b=$( smsK $1 $2 )
+if $( isnumber $a $b )
+then
+  local str=$( echo "$a + ($b)" | bc -l )
+fi
+check $str
+}
 sms ()
 {
 if [ -e $1.s ]
@@ -206,7 +236,7 @@ check $str
 
 ###################
 
-for f in enbpci enmchf smsp
+for f in enbpci enmchf smsp smsK nmsK msK
 do
 eval "D$f ()
 {
