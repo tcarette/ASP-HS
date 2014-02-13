@@ -136,7 +136,7 @@ ncfg ()
 {
 if [ -e $1.c ]
 then
-  tnrcfg $1.c
+  nrcfg_bl $1.c "$2"
 fi
 }
 
