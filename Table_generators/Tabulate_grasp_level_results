@@ -1,0 +1,43 @@
+#!/bin/bash
+#    Copyright (C) 2013 Thomas Carette
+
+#####################################################
+#
+# Edit this
+#
+## iterators:
+Js=("1/2 +" "1/2 -" "3/2 -")
+operateurs="ncfg CONVstart CONVdpm CONVnorm en enc T nmsK pipj smsK msK F"
+I=1
+abscisse="$(for i in *.csum; do echo ${i%.csum}; done)"
+#####################################################
+
+source ~/bin/anaGrasp_func.sh
+
+echo '-'
+
+echo "$(\
+	for J in "${Js[@]}"
+	do
+		bid="$(\
+		for Op in ${operateurs}
+		do
+			echo "$Op$(echo $J | tr -d ' ' ) &"
+		done )"
+		echo "model & " $bid
+		for i in ${abscisse}
+		do
+			if ! $(grep -q "$J" ${i}.csum); then continue; fi
+			temp=${i}
+			echo "${i} &" $(\
+				for Op in ${operateurs}
+				do
+					echo $(\
+						echo "$( ${Op} ${temp} "$J" $I ) & "
+					)
+				done
+			)
+		done
+		echo ""
+	done
+)" | column -t  | sed 's/& *$/\\\\ /g'
