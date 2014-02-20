@@ -22,7 +22,7 @@ echo $i
 TMP=${TMPDIR}/SMS${1}/${CONFIG}
 OUT=${WORKDIR}
 
-n=$(rnrcfg ${CONFIG}.c)
+n=$(tnrcfg ${CONFIG}.c)
 
 MEM=$(( ${n}/150000 + 1))
 FILE=$(( ${MEM} * 10 ))
