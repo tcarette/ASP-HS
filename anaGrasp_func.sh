@@ -132,14 +132,6 @@ else echo '     -     '
 fi
 }
 
-ncfg ()
-{
-if [ -e $1.c ]
-then
-  nrcfg_bl $1.c "$2"
-fi
-}
-
 en ()
 {
 local n=$( inp $3 '.' )

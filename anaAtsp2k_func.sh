@@ -33,15 +33,6 @@ fi
 check $str
 }
 
-ncfg ()
-{
-if [ -e $1.c ]
-then
-  local str=$( nrcfg $1.c )
-fi
-check $str
-}
-
 enmchf ()
 {
 if [ -e $1.s ]
